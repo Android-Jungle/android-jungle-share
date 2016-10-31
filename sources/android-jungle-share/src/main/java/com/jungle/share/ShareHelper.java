@@ -80,6 +80,16 @@ public class ShareHelper {
     }
 
 
+    public static ShareHelper getInstance() {
+        if (mInstance == null) {
+            mInstance = new ShareHelper();
+        }
+
+        return mInstance;
+    }
+
+
+    private static ShareHelper mInstance;
     private Tencent mTencent;
     private IWXAPI mWXApi;
     private IWeiboShareAPI mWeiboShareAPI = null;
@@ -87,6 +97,10 @@ public class ShareHelper {
     private Map<String, WeakReference<OnShareListener>> mWXShareListenerList = new HashMap<>();
     private Map<String, WeakReference<OnShareListener>> mWBlogShareListenerList = new HashMap<>();
 
+
+    protected ShareHelper() {
+        mInstance = this;
+    }
 
     public void setShareImageLoader(ShareImageLoader shareImageLoader) {
         mShareImageLoader = shareImageLoader;
@@ -104,20 +118,20 @@ public class ShareHelper {
         }
     }
 
-    private boolean ensureWXApi(final Activity activity) {
+    private boolean ensureWXApi(final Context context) {
         if (mWXApi == null) {
-            mWXApi = ShareUtils.createNewWXApi(activity, true);
+            mWXApi = ShareUtils.createNewWXApi(context, true);
         }
 
-        return ShareUtils.ensureWXApi(activity, mWXApi);
+        return ShareUtils.ensureWXApi(context, mWXApi);
     }
 
-    private boolean ensureWblogShare(Activity activity) {
-        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(activity, ShareUtils.getSinaAppKey(activity));
+    private boolean ensureWblogShare(Context context) {
+        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(context, ShareUtils.getSinaAppKey(context));
         mWeiboShareAPI.registerApp();
 
         if (!mWeiboShareAPI.isWeiboAppInstalled()) {
-            Toast.makeText(activity, R.string.wblog_not_installed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.wblog_not_installed, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -220,11 +234,9 @@ public class ShareHelper {
     }
 
     public void shareToWXFriend(
-            final Activity activity,
-            final ShareInfo shareInfo,
-            final OnShareListener listener) {
+            final Context context, final ShareInfo shareInfo, final OnShareListener listener) {
 
-        if (!ensureWXApi(activity)) {
+        if (!ensureWXApi(context)) {
             if (listener != null) {
                 listener.onFailed(null);
             }
@@ -236,7 +248,7 @@ public class ShareHelper {
             mShareImageLoader.loadImage(shareInfo.mImageUrl, new ShareImageLoader.Callback() {
                 @Override
                 public void onSuccess(Bitmap bitmap) {
-                    shareToWXFriend(activity, shareInfo, bitmap, listener);
+                    shareToWXFriend(context, shareInfo, bitmap, listener);
                 }
 
                 @Override
@@ -245,20 +257,20 @@ public class ShareHelper {
                         listener.onFailed(null);
                     }
 
-                    Toast.makeText(activity, R.string.share_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.share_failed, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-            shareToWXFriend(activity, shareInfo, null, listener);
+            shareToWXFriend(context, shareInfo, null, listener);
         }
     }
 
     public void shareToWXFriendsGroup(
-            final Activity activity,
+            final Context context,
             final ShareInfo shareInfo,
             final OnShareListener listener) {
 
-        if (!ensureWXApi(activity)) {
+        if (!ensureWXApi(context)) {
             if (listener != null) {
                 listener.onFailed(null);
             }
@@ -270,7 +282,7 @@ public class ShareHelper {
             mShareImageLoader.loadImage(shareInfo.mImageUrl, new ShareImageLoader.Callback() {
                 @Override
                 public void onSuccess(Bitmap bitmap) {
-                    shareToWXFriendsGroup(activity, shareInfo, bitmap, listener);
+                    shareToWXFriendsGroup(context, shareInfo, bitmap, listener);
                 }
 
                 @Override
@@ -279,18 +291,18 @@ public class ShareHelper {
                         listener.onFailed(null);
                     }
 
-                    Toast.makeText(activity, R.string.share_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.share_failed, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-            shareToWXFriendsGroup(activity, shareInfo, null, listener);
+            shareToWXFriendsGroup(context, shareInfo, null, listener);
         }
     }
 
     public void shareToWXFriend(
-            Activity activity, ShareInfo shareInfo, Bitmap bmp, OnShareListener listener) {
+            Context context, ShareInfo shareInfo, Bitmap bmp, OnShareListener listener) {
 
-        if (!ensureWXApi(activity)) {
+        if (!ensureWXApi(context)) {
             if (listener != null) {
                 listener.onFailed(null);
             }
@@ -299,7 +311,7 @@ public class ShareHelper {
         }
 
         SendMessageToWX.Req req = getWXShareReq(
-                activity, shareInfo, bmp, SendMessageToWX.Req.WXSceneSession);
+                context, shareInfo, bmp, SendMessageToWX.Req.WXSceneSession);
         if (listener != null) {
             mWXShareListenerList.put(req.transaction,
                     new WeakReference<OnShareListener>(listener));
@@ -309,9 +321,9 @@ public class ShareHelper {
     }
 
     public void shareToWXFriendsGroup(
-            Activity activity, ShareInfo shareInfo, Bitmap bmp, OnShareListener listener) {
+            Context context, ShareInfo shareInfo, Bitmap bmp, OnShareListener listener) {
 
-        if (!ensureWXApi(activity)) {
+        if (!ensureWXApi(context)) {
             if (listener != null) {
                 listener.onFailed(null);
             }
@@ -320,7 +332,7 @@ public class ShareHelper {
         }
 
         SendMessageToWX.Req req = getWXShareReq(
-                activity, shareInfo, bmp, SendMessageToWX.Req.WXSceneTimeline);
+                context, shareInfo, bmp, SendMessageToWX.Req.WXSceneTimeline);
         if (listener != null) {
             mWXShareListenerList.put(req.transaction,
                     new WeakReference<OnShareListener>(listener));
@@ -382,9 +394,7 @@ public class ShareHelper {
     }
 
     public void shareToSinaWblog(
-            final Activity activity,
-            final ShareInfo shareInfo,
-            final OnShareListener listener) {
+            final Activity activity, final ShareInfo shareInfo, final OnShareListener listener) {
 
         if (!TextUtils.isEmpty(shareInfo.mImageUrl) && mShareImageLoader != null) {
             mShareImageLoader.loadImage(shareInfo.mImageUrl, new ShareImageLoader.Callback() {
@@ -431,7 +441,7 @@ public class ShareHelper {
     }
 
     private SendMultiMessageToWeiboRequest getWblogShareReq(
-            Activity activity, ShareInfo shareInfo, Bitmap bitmap) {
+            Context context, ShareInfo shareInfo, Bitmap bitmap) {
 
         WeiboMultiMessage message = new WeiboMultiMessage();
 
@@ -443,7 +453,7 @@ public class ShareHelper {
         message.mediaObject = webPage;
 
         if (bitmap == null) {
-            Drawable drawable = ShareUtils.getAppIcon(activity);
+            Drawable drawable = ShareUtils.getAppIcon(context);
             if (drawable instanceof BitmapDrawable) {
                 bitmap = ((BitmapDrawable) drawable).getBitmap();
             }

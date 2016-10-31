@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">jungle-share-demo</string>
+    <string name="share_to_wx">Share To Wx</string>
+    <string name="share_to_qzone">Share To QZone</string>
+    <string name="share_to_wblog">Share To Weibo</string>
+    <string name="share_to_wx_friends">Share To WX Friends Group</string>
+    <string name="share_to_qq">Share To QQ</string>
 </resources>

@@ -18,7 +18,6 @@
 
 package com.jungle.share;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -122,10 +121,10 @@ public class ShareUtils {
         return wxApi;
     }
 
-    public static boolean ensureWXApi(final Activity activity, IWXAPI wxApi) {
+    public static boolean ensureWXApi(final Context context, IWXAPI wxApi) {
         if (wxApi.isWXAppInstalled()) {
             if (!wxApi.isWXAppSupportAPI()) {
-                Toast.makeText(activity, R.string.wx_not_support_share, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.wx_not_support_share, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -138,11 +137,32 @@ public class ShareUtils {
     public static void getWXAccessToken(
             Context context, String code, final OnGetAccessTokenListener listener) {
 
-        boolean success = false;
+        String content = getHttpUrlContent(String.format(GET_ACCESS_TOKEN_CGI,
+                ShareUtils.getWXApiId(context), ShareUtils.getWXApiSecret(context), code));
+        if (TextUtils.isEmpty(content)) {
+            listener.onFailed();
+            return;
+        }
 
         try {
-            URL httpUrl = new URL(String.format(GET_ACCESS_TOKEN_CGI,
-                    ShareUtils.getWXApiId(context), ShareUtils.getWXApiSecret(context), code));
+            JSONObject json = new JSONObject(content);
+            String openId = ShareUtils.safeGetString(json, "openid");
+            String accessToken = ShareUtils.safeGetString(json, "access_token");
+
+            if (!TextUtils.isEmpty(openId) && !TextUtils.isEmpty(accessToken)) {
+                listener.onSuccess(openId, accessToken);
+                return;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        listener.onFailed();
+    }
+
+    public static String getHttpUrlContent(String url) {
+        try {
+            URL httpUrl = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
             connection.connect();
 
@@ -155,26 +175,14 @@ public class ShareUtils {
                     content += inputLine + "\n";
                 }
 
-                try {
-                    JSONObject json = new JSONObject(content);
-                    String openId = ShareUtils.safeGetString(json, "openid");
-                    String accessToken = ShareUtils.safeGetString(json, "access_token");
-
-                    if (!TextUtils.isEmpty(openId) && !TextUtils.isEmpty(accessToken)) {
-                        success = true;
-                        listener.onSuccess(openId, accessToken);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                bufferReader.close();
+                return content;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (!success) {
-            listener.onFailed();
-        }
+        return null;
     }
 
     public static String safeGetString(JSONObject json, String node) {

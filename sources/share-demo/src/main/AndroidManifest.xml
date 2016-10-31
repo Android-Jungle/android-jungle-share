@@ -3,12 +3,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jungle.share.demo">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="TencentAppId"
+            android:value="xxx"/>
+
+        <meta-data
+            android:name="WXAppId"
+            android:value="xxx"/>
+
+        <meta-data
+            android:name="SinaAppKey"
+            android:value="xxx"/>
+
 
         <activity android:name=".MainActivity">
             <intent-filter>
