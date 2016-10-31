@@ -10,9 +10,15 @@
 - QQ 空间
 - 新浪微博
 
-### 2、使用方法
+### 2、依赖引入
 
-#### 2.1、分享权限申请
+```
+compile 'com.jungle.share:android-jungle-share:1.0'
+```
+
+### 3、使用方法
+
+#### 3.1、分享权限申请
 
 我们自己的 App 在分享内容之前，必须去上述分享目标应用的官方开发者平台上申请分享权限，地址如下：
 
@@ -22,7 +28,7 @@
 |QQ / QQ 空间|TencentAppId|[http://open.qq.com/](http://open.qq.com/)|
 |新浪微博|SinaAppKey|[http://open.weibo.com/apps](http://open.weibo.com/apps)|
 
-#### 2.2、声明上述获得的 Key
+#### 3.2、声明上述获得的 Key
 
 在我们的 App 的 `AndroidManifest.xml` 中，需要声明上述获得的 Key：
 
@@ -44,7 +50,7 @@
 </application>
 ```
 
-#### 2.3、声明分享结果中转 Activity
+#### 3.3、声明分享结果中转 Activity
 
 我们已经预定义好了各个第三方应用的分享结果中转 Activity：**WXShareBaseEntryActivity**、**WBlogBaseShareActivity**，我们需要在自己的 App 中派生它，然后声明：
 
@@ -95,7 +101,7 @@
 
 **测试分享的时候，将 App 编译为 Release 包并且用 keystore 签名后再测。**一般来说，签名信息在你申请分享权限的时候，需要在开放平台上面填入。
 
-#### 2.4、分享
+#### 3.4、分享
 
 分享就比较简单了，直接调用 `com.jungle.share.ShareHelper` 中的方法即可。例如：
 
@@ -126,7 +132,7 @@ ShareHelper.getInstance().shareToWXFriend(context, info, shareBitmap, new ShareH
 });
 ```
 
-### 3、图片分享
+### 4、图片分享
 
 分享图片有两种方法：
 
