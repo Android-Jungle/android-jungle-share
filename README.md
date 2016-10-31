@@ -16,6 +16,24 @@
 compile 'com.jungle.share:android-jungle-share:1.0'
 ```
 
+混淆 Proguard 配置如下：
+
+```
+# QQ Share.
+-keep class com.tencent.open.TDialog$*
+-keep class com.tencent.open.TDialog$* {*;}
+-keep class com.tencent.open.PKDialog
+-keep class com.tencent.open.PKDialog {*;}
+-keep class com.tencent.open.PKDialog$*
+-keep class com.tencent.open.PKDialog$* {*;}
+
+
+# WX Share.
+-keep class com.tencent.mm.**{*;}
+-keep class com.tencent.mm.sdk.modelmsg.WXMediaMessage {*;}
+-keep class com.tencent.mm.sdk.modelmsg.** implements com.tencent.mm.sdk.modelmsg.WXMediaMessage$IMediaObject {*;}
+```
+
 ### 3、使用方法
 
 #### 3.1、分享权限申请
