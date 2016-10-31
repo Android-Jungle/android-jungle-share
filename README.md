@@ -117,7 +117,9 @@ compile 'com.jungle.share:android-jungle-share:1.0'
 
 其中注意：**com.tencent.tauth.AuthActivity** 声明的时候，intent-filter 中带了一个 **data**，其 scheme 必须为 **tencent+你的TencentAppId**。
 
-**测试分享的时候，将 App 编译为 Release 包并且用 keystore 签名后再测。**一般来说，签名信息在你申请分享权限的时候，需要在开放平台上面填入。
+微信的 Activity 必须为 **`com.your.app.wxapi.WXEntryActivity`**，新浪微博的必须为 **`com.your.app.WBShareActivity`**。
+
+**测试分享的时候，将 App 编译为 Release 包并且用 keystore 签名后再测。** 一般来说，签名信息在你申请分享权限的时候，需要在开放平台上面填入。
 
 #### 3.4、分享
 
