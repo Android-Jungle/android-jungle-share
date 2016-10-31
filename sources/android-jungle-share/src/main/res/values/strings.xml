@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">android-jungle-share</string>
+    <string name="download_wx_msg">您尚未安装微信或者微信版本太低，现在去下载？</string>
+    <string name="cannot_open_url_tips">无法打开网页，请安装浏览器</string>
+    <string name="share_succeeded">分享成功！</string>
+    <string name="share_failed">分享失败！</string>
+    <string name="failed_permission_denied">没有权限！</string>
+    <string name="user_canceled">用户已取消。</string>
+    <string name="wx_not_support_share">您的微信版本不支持分享！</string>
+    <string name="login_failed_error">登录失败！错误码：%1$d</string>
+    <string name="development">开发者选项</string>
+    <string name="channel_id_desc">渠道号：</string>
+    <string name="test_env">测试环境：</string>
+    <string name="test_env_address_desc">测试环境地址：</string>
+    <string name="edit">编辑</string>
+    <string name="complete_edit">完成</string>
+    <string name="login_failed_tips">登录失败！</string>
+    <string name="invalid_phone_number">输入的手机号码格式有误！</string>
+    <string name="invalid_email_address">输入的邮箱格式有误！</string>
+
+    <string name="verify_code_invalid">输入的验证码不正确!</string>
+    <string name="get_verify_code_failed">获取验证码失败！</string>
+    <string name="get_verify_code_failed_ret_code">获取验证码失败！错误码 %d。</string>
+    <string name="verify_code_time_format">%1$d秒</string>
+    <string name="get_verify_code">获取验证码</string>
+    <string name="get_verify_code_first">请先获取验证码！</string>
+    <string name="wblog_not_installed">没有安装新浪微博客户端，无法分享</string>
 </resources>

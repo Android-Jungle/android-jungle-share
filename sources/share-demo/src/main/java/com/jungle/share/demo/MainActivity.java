@@ -2,7 +2,6 @@ package com.jungle.share.demo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import com.jungle.share.R;
 
 public class MainActivity extends AppCompatActivity {
 
