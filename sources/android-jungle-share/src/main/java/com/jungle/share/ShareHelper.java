@@ -110,6 +110,8 @@ public class ShareHelper {
         if (mWXApi != null) {
             mWXApi.unregisterApp();
         }
+
+        mInstance = null;
     }
 
     private void ensureTencent(Context context) {
