@@ -27,6 +27,8 @@
 在我们的 App 的 `AndroidManifest.xml` 中，需要声明上述获得的 Key：
 
 ```xml
+<uses-permission android:name="android.permission.INTERNET"/>
+
 <application>
     <meta-data
         android:name="TencentAppId"
@@ -122,6 +124,32 @@ ShareHelper.getInstance().shareToWXFriend(context, info, shareBitmap, new ShareH
         showToast("Share FAILED: " + message);
     }
 });
+```
+
+### 3、图片分享
+
+分享图片有两种方法：
+
+- 使用分享接口，直接传入 Bitmap；
+- 在 ShareInfo 中指定 **mImageUrl**。
+
+采用第二种方法的时候，分享组件会使用 **ShareHelper.ShareImageLoader** 这个帮助图片加载类，来加载图片获得 Bitmap，然后分享出去。所以，你必须先设置这个 ImageLoader：
+
+```java
+ShareHelper.getInstance().setShareImageLoader(new ShareHelper.ShareImageLoader() {
+
+    @Override
+    public void loadImage(String url, Callback callback) {
+        Bitmap bitmap = ...;
+
+        callback.onSuccess(bitmap);
+    }
+});
+
+ShareInfo info = new ShareInfo();
+info.mImageUrl = "https://avatars3.githubusercontent.com/u/2292646?v=3&s=466";
+
+ShareHelper.getInstance().shareToWXFriend(context, info, listener);
 ```
 
 <br>
