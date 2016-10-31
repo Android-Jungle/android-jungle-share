@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements ShareHelper.OnSha
         ShareInfo shareInfo = new ShareInfo();
         shareInfo.mTitle = "Android Jungle Share Library";
         shareInfo.mSummary = "Thirdparty share components for Android. Supports WeChat / QZone / Weibo etc.";
+        shareInfo.mShareUrl = "https://github.com/arnozhang/android-jungle-share";
 
         return shareInfo;
     }
